@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>dotnet-AppointmentScheduler.Workers-371b3f67-092e-4745-82c9-5422adce3215</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AppointmentScheduler.Application\AppointmentScheduler.Application.csproj" />
+    <ProjectReference Include="..\AppointmentScheduler.Infrastructure\AppointmentScheduler.Infrastructure.csproj" />
+  </ItemGroup>
+</Project>
