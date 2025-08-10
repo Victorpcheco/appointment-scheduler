@@ -9,8 +9,7 @@ if (string.IsNullOrEmpty(defaultConnectionString))
     throw new InvalidOperationException("The connection string 'DefaultConnection' is not configured.");
 }
 
-
-// config helth checks
+// config helth check
 builder.Services.AddHealthChecks()
     .AddSqlServer(defaultConnectionString)
     .AddRabbitMQ(factory: serviceProvider =>
@@ -27,7 +26,7 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-app.MapHealthChecks("/healthcheck");
+
 
 if (app.Environment.IsDevelopment())
 {
@@ -35,6 +34,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.MapGet("/", () => "Appointment Scheduler API is running.");
+app.MapGet("/status", () => "Api agendamento de consulta rodando com sucesso!");
+app.MapHealthChecks("/health");
 
 app.Run();
