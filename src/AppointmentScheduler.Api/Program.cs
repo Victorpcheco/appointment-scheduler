@@ -1,6 +1,27 @@
+using Microsoft.Extensions.DependencyInjection;
+using RabbitMQ.Client;
+
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+// Tratativa para conexão com o banco de dados
+var defaultConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+if (string.IsNullOrEmpty(defaultConnectionString))
+{
+    throw new InvalidOperationException("The connection string 'DefaultConnection' is not configured.");
+}
+
+builder.Services.AddHealthChecks()
+    .AddSqlServer(defaultConnectionString)
+    .AddRabbitMQ(factory: serviceProvider =>
+    {
+        var connectionFactory = new ConnectionFactory()
+        {
+            Uri = new Uri("amqp://guest:guest@localhost:5672")
+        };
+        return connectionFactory.CreateConnectionAsync();
+    });
+
+//builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -12,10 +33,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+app.MapGet("/", () => "Appointment Scheduler API is running.");
 
-app.UseAuthorization();
-
-app.MapControllers();
+app.UseHealthChecks("/health");
+//app.UseAuthorization();
+//app.MapControllers();
 
 app.Run();
